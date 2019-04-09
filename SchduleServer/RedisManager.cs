@@ -27,5 +27,10 @@ namespace SchduleServer
             }
             return redisConn;
         }
+
+        public static RedisChannel TaskTopic(string taskCode)
+        {
+            return new RedisChannel("TaskTopic." + taskCode, RedisChannel.PatternMode.Literal);
+        }
     }
 }

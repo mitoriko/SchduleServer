@@ -39,6 +39,7 @@ namespace SchduleServer
             .Build();
 
             await sched.ScheduleJob(job, trigger);
+            Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "> " + "已启动更新任务列表计划");
         }
     }
 }

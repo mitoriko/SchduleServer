@@ -15,7 +15,9 @@ namespace SchduleServer
     {
         public const string ENV = "PRO";
         public const string GROUP = "Schdule";
-        public const string TASK_PREFIX = "Task.";
+        public const string TASK_PREFIX = "Task";
+        public const string CONFIG_TOPIC = "ConfigServerTopic";
+        public const string TASK_TOPIC = "TaskTopic";
         public const string TOPIC_MESSAGE = "update";
         public const int REDIS_DB = 11;
         public static IScheduler scheduler;
@@ -44,15 +46,17 @@ namespace SchduleServer
         static void Subscribe()
         {
             var redis = RedisManager.getRedisConn();
-            var queue = redis.GetSubscriber().Subscribe("ConfigServerTopic." + ENV + "." + GROUP);
+            var queue = redis.GetSubscriber().Subscribe(CONFIG_TOPIC + "." + ENV + "." + GROUP);
 
             queue.OnMessage(action);
+            Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "> " + "已订阅" + CONFIG_TOPIC + "." + ENV + "." + GROUP + "配置更新");
         }
 
         public static void onMessageHandle(ChannelMessage channelMessage)
         {
             if(channelMessage.Message.ToString() == TOPIC_MESSAGE)
             {
+                Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "> " + "收到配置更新通知");
                 GetConfig();
             }
         }
@@ -80,6 +84,14 @@ namespace SchduleServer
             }
 
             DatabaseOperation.TYPE = new DBManager();
+            Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "> " + "加载配置信息完成");
+        }
+
+        public static void Topic(string taskCode)
+        {
+            var redis = RedisManager.getRedisConn();
+            var db = redis.GetDatabase(Global.REDIS_DB);
+            db.Publish(RedisManager.TaskTopic(taskCode), TOPIC_MESSAGE);
         }
 
         public static string Redis

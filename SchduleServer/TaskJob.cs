@@ -27,7 +27,13 @@ namespace SchduleServer
 
             foreach(string id in list)
             {
-                await db.ListLeftPushAsync(Global.TASK_PREFIX + data["taskCode"], id);
+                await db.ListLeftPushAsync(Global.TASK_PREFIX + "." + data["taskCode"], id);
+            }
+
+            if(list.Count > 0)
+            {
+                Global.Topic(data["taskCode"].ToString());
+                Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "> " + "任务(" + data["taskCode"] + ")部署了" + list.Count + "个Job");
             }
         }
     }

@@ -12,12 +12,6 @@ namespace SchduleServer
         public async Task Execute(IJobExecutionContext context)
         {
             IScheduler sched = await Global.GetScheduler();
-            //while (sched.IsStarted)
-            //{
-            //    await sched.Shutdown(true);
-            //}
-            //await sched.Clear();
-            //await sched.Start();
 
             if(!sched.IsStarted)
             {
@@ -49,6 +43,7 @@ namespace SchduleServer
                 .Build();
 
                 await sched.ScheduleJob(job, trigger);
+                Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "> " + "已启动任务：" + item.taskCode);
             }
         }
     }
