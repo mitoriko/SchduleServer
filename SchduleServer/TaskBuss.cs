@@ -6,11 +6,23 @@ namespace SchduleServer
 {
     public class TaskBuss
     {
-        public void InitTask()
+        public List<TaskItem> InitTask()
         {
             SchduleDao schduleDao = new SchduleDao();
-            var list = schduleDao.GetTaskList();
+            return schduleDao.GetTaskList();
 
+        }
+
+        public List<string> GetJobsIds(
+            string db,
+            string table,
+            string key,
+            string state,
+            string stateFrom,
+            string stateTo)
+        {
+            SchduleDao schduleDao = new SchduleDao();
+            return schduleDao.GetJobsIds(db, table, key, state, stateFrom, stateTo);
         }
     }
 }

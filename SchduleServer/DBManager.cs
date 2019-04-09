@@ -15,7 +15,6 @@ namespace SchduleServer
                      + ";Database=core;Uid=" + Global.DBUser
                      + ";Pwd=" + Global.DBPassword
                      + ";CharSet=utf8mb4; SslMode =none;";
-            Console.Write(this.str);
             this.dbt = DBType.Mysql;
         }
 
