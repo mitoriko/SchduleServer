@@ -63,19 +63,19 @@ namespace SchduleServer
 
         static void GetConfig()
         {
+            string url = "http://" + ConfigServer + "/api/config/Config/Open";
+            ConfigParam configParam = new ConfigParam
+            {
+                env = ENV,
+                group = GROUP
+            };
+            RequestParam requestParam = new RequestParam
+            {
+                method = "GetConfig",
+                param = configParam
+            };
+            string body = JsonConvert.SerializeObject(requestParam);
             try {
-                string url = "http://" + ConfigServer + "/api/config/Config/Open";
-                ConfigParam configParam = new ConfigParam
-                {
-                    env = ENV,
-                    group = GROUP
-                };
-                RequestParam requestParam = new RequestParam
-                {
-                    method = "GetConfig",
-                    param = configParam
-                };
-                string body = JsonConvert.SerializeObject(requestParam);
                 string resp = Utils.PostHttp(url, body);
                 ResponseObj responseObj = JsonConvert.DeserializeObject<ResponseObj>(resp);
 
@@ -88,8 +88,10 @@ namespace SchduleServer
                 Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "> " + "加载配置信息完成");
 
             }
-            catch
+            catch(Exception e)
             {
+                Console.WriteLine(url);
+                Console.WriteLine(e.StackTrace);
                 Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "> " + "加载配置信息失败");
             }
         }
