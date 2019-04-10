@@ -34,7 +34,7 @@ namespace SchduleServer
                 .WithIdentity("UpdateTaskTrigger", "System")
                 .StartNow()
                 .WithSimpleSchedule(x => x
-                    .WithIntervalInSeconds(60)
+                    .WithIntervalInSeconds(Global.Interval)
                     .RepeatForever())
             .Build();
 

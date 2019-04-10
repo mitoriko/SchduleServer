@@ -63,35 +63,49 @@ namespace SchduleServer
 
         static void GetConfig()
         {
-            string url = "http://" + ConfigServer + "/api/config/Config/Open";
-            ConfigParam configParam = new ConfigParam
-            {
-                env = ENV,
-                group = GROUP
-            };
-            RequestParam requestParam = new RequestParam
-            {
-                method = "GetConfig",
-                param = configParam
-            };
-            string body = JsonConvert.SerializeObject(requestParam);
-            string resp = Utils.PostHttp(url, body);
-            ResponseObj responseObj = JsonConvert.DeserializeObject<ResponseObj>(resp);
+            try {
+                string url = "http://" + ConfigServer + "/api/config/Config/Open";
+                ConfigParam configParam = new ConfigParam
+                {
+                    env = ENV,
+                    group = GROUP
+                };
+                RequestParam requestParam = new RequestParam
+                {
+                    method = "GetConfig",
+                    param = configParam
+                };
+                string body = JsonConvert.SerializeObject(requestParam);
+                string resp = Utils.PostHttp(url, body);
+                ResponseObj responseObj = JsonConvert.DeserializeObject<ResponseObj>(resp);
 
-            foreach(ConfigItem item in responseObj.data)
-            {
-                Environment.SetEnvironmentVariable(item.key, item.value);
+                foreach (ConfigItem item in responseObj.data)
+                {
+                    Environment.SetEnvironmentVariable(item.key, item.value);
+                }
+
+                DatabaseOperation.TYPE = new DBManager();
+                Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "> " + "加载配置信息完成");
+
             }
-
-            DatabaseOperation.TYPE = new DBManager();
-            Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "> " + "加载配置信息完成");
+            catch
+            {
+                Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "> " + "加载配置信息失败");
+            }
         }
-
         public static void Topic(string taskCode)
         {
             var redis = RedisManager.getRedisConn();
             var db = redis.GetDatabase(Global.REDIS_DB);
             db.Publish(RedisManager.TaskTopic(taskCode), TOPIC_MESSAGE);
+        }
+
+        public static int Interval
+        {
+            get
+            {
+                return Convert.ToInt32(Environment.GetEnvironmentVariable("Interval"));
+            }
         }
 
         public static string Redis
