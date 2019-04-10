@@ -39,15 +39,14 @@ namespace SchduleServer
 
         public static void Startup()
         {
-            Subscribe();
-            GetConfig();
+            GetConfig(true);
         }
 
         static void Subscribe()
         {
             var redis = RedisManager.getRedisConn();
             var queue = redis.GetSubscriber().Subscribe(CONFIG_TOPIC + "." + ENV + "." + GROUP);
-
+            
             queue.OnMessage(action);
             Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "> " + "已订阅" + CONFIG_TOPIC + "." + ENV + "." + GROUP + "配置更新");
         }
@@ -57,13 +56,13 @@ namespace SchduleServer
             if(channelMessage.Message.ToString() == TOPIC_MESSAGE)
             {
                 Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "> " + "收到配置更新通知");
-                GetConfig();
+                GetConfig(false);
             }
         }
 
-        static void GetConfig()
+        static void GetConfig(bool isFirst)
         {
-            string url = "http://" + ConfigServer + "/api/config/Config/Open";
+            string url = "http://ConfigServer/api/config/Config/Open";
             ConfigParam configParam = new ConfigParam
             {
                 env = ENV,
@@ -86,7 +85,10 @@ namespace SchduleServer
 
                 DatabaseOperation.TYPE = new DBManager();
                 Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "> " + "加载配置信息完成");
-
+                if(isFirst)
+                {
+                    Subscribe();
+                }
             }
             catch(Exception e)
             {
