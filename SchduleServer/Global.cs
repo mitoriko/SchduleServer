@@ -62,7 +62,7 @@ namespace SchduleServer
 
         static void GetConfig(bool isFirst)
         {
-            string url = "http://ConfigServer/api/config/Config/Open";
+            string url = "http://" + ConfigServer + "/api/config/Config/Open";
             ConfigParam configParam = new ConfigParam
             {
                 env = ENV,
