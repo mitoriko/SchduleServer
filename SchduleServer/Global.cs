@@ -98,6 +98,7 @@ namespace SchduleServer
                 Console.WriteLine(url);
                 Console.WriteLine(e.StackTrace);
                 Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "> " + "加载配置信息失败");
+                DatabaseOperation.TYPE = new DBManager();
             }
         }
         public static void Topic(string taskCode)

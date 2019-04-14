@@ -1,6 +1,7 @@
 ﻿using Quartz;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace SchduleServer
 
             TaskBuss taskBuss = new TaskBuss();
             List<TaskItem> list = taskBuss.InitTask();
-
+            
             foreach (TaskItem item in list)
             {
                 JobDataMap keyValues = new JobDataMap();
@@ -31,17 +32,16 @@ namespace SchduleServer
                     keyValues.Add(fieldInfo.Name, fieldInfo.GetValue(item));
                 }
                 IJobDetail job = JobBuilder.Create<TaskJob>()
-                .WithIdentity("Task", "Buss")
+                .WithIdentity(item.taskCode, "Buss")
                 .SetJobData(keyValues)
                 .Build();
                 ITrigger trigger = TriggerBuilder.Create()
-                    .WithIdentity("TaskTrigger", "Buss")
+                    .WithIdentity(item.taskCode + "Trigger", "Buss")
                     .StartNow()
                     .WithSimpleSchedule(x => x
                         .WithIntervalInSeconds(item.interval)
                         .RepeatForever())
                 .Build();
-
                 await sched.ScheduleJob(job, trigger);
                 Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "> " + "已启动任务：" + item.taskCode);
             }
