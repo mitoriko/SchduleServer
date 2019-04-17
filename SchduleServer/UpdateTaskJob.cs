@@ -31,18 +31,39 @@ namespace SchduleServer
                 {
                     keyValues.Add(fieldInfo.Name, fieldInfo.GetValue(item));
                 }
-                IJobDetail job = JobBuilder.Create<TaskJob>()
-                .WithIdentity(item.taskCode, "Buss")
-                .SetJobData(keyValues)
-                .Build();
-                ITrigger trigger = TriggerBuilder.Create()
-                    .WithIdentity(item.taskCode + "Trigger", "Buss")
+                IJobDetail job;
+                if (item.taskType == "0")
+                {
+                    job = JobBuilder.Create<TaskDBJob>()
+                    .WithIdentity(item.taskCode, "BussDB")
+                    .SetJobData(keyValues)
+                    .Build();
+                }
+                else
+                {
+                    job = JobBuilder.Create<TaskLoopJob>()
+                    .WithIdentity(item.taskCode, "BussLoop")
+                    .SetJobData(keyValues)
+                    .Build();
+                }
+                if (item.triggerType == "0")
+                {
+                    ITrigger trigger = TriggerBuilder.Create()
+                    .WithIdentity(item.taskCode + "Trigger", "BussTrig")
                     .StartNow()
                     .WithSimpleSchedule(x => x
                         .WithIntervalInSeconds(item.interval)
                         .RepeatForever())
-                .Build();
-                await sched.ScheduleJob(job, trigger);
+                    .Build();
+                    await sched.ScheduleJob(job, trigger);
+                }
+                else
+                {
+                    ICronTrigger cronTrigger = (ICronTrigger)TriggerBuilder.Create()
+                    .WithCronSchedule(item.cronExpression)
+                    .Build();
+                    await sched.ScheduleJob(job, cronTrigger);
+                }
                 Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "> " + "已启动任务：" + item.taskCode);
             }
         }

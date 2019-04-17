@@ -30,6 +30,9 @@ namespace SchduleServer
                         taskTable = dr["TASK_TABLE"].ToString(),
                         interval = Convert.ToInt32(dr["INTERVAL"]),
                         remark = dr["REMARK"].ToString(),
+                        taskType = dr["TASK_TYPE"].ToString(),
+                        triggerType = dr["TRIGGER_TYPE"].ToString(),
+                        cronExpression = dr["CRON_EXPRESSION"].ToString(),
                     };
                     list.Add(taskItem);
                 }

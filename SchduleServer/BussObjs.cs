@@ -47,5 +47,8 @@ namespace SchduleServer
         public string taskCode;
         public int interval;
         public string remark;
+        public string taskType;
+        public string triggerType;
+        public string cronExpression;
     }
 }

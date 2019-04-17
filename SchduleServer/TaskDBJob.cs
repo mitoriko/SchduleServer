@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SchduleServer
 {
-    public class TaskJob : IJob
+    public class TaskDBJob : IJob
     {
         public async Task Execute(IJobExecutionContext context)
         {
