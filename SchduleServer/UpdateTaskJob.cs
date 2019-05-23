@@ -16,18 +16,12 @@ namespace SchduleServer
             {
                 IScheduler sched = await Global.GetScheduler();
 
-                if (sched.IsStarted)
-                {
-                    await sched.Shutdown();
-                    await sched.Clear();
-                }
-
                 if (!sched.IsStarted)
                 {
                     await sched.Start();
                 }
-                
-                
+
+                await sched.Clear();
 
                 TaskBuss taskBuss = new TaskBuss();
                 List<TaskItem> list = taskBuss.InitTask();
