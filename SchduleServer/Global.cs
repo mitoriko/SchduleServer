@@ -101,11 +101,11 @@ namespace SchduleServer
                 DatabaseOperation.TYPE = new DBManager();
             }
         }
-        public static void Topic(string taskCode)
+        public static async Task Topic(string taskCode)
         {
             var redis = RedisManager.getRedisConn();
             var db = redis.GetDatabase(Global.REDIS_DB);
-            db.Publish(RedisManager.TaskTopic(taskCode), TOPIC_MESSAGE);
+            await db.PublishAsync(RedisManager.TaskTopic(taskCode), TOPIC_MESSAGE);
         }
 
         public static int Interval

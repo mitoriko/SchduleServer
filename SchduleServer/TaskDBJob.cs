@@ -32,7 +32,7 @@ namespace SchduleServer
 
             if(list.Count > 0)
             {
-                Global.Topic(data["taskCode"].ToString());
+                await Global.Topic(data["taskCode"].ToString());
                 Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "> " + "任务(" + data["taskCode"] + ")部署了" + list.Count + "个Job");
             }
         }

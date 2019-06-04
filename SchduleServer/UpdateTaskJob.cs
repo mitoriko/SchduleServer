@@ -20,7 +20,7 @@ namespace SchduleServer
                 {
                     await sched.Start();
                 }
-
+                
                 await sched.Clear();
 
                 TaskBuss taskBuss = new TaskBuss();
