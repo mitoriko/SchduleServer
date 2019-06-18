@@ -13,7 +13,11 @@ namespace SchduleServer
 {
     public class Global
     {
+#if DEBUG
+        public const string ENV = "DEV";
+#else
         public const string ENV = "PRO";
+#endif
         public const string GROUP = "Schdule";
         public const string TASK_PREFIX = "Task";
         public const string CONFIG_TOPIC = "ConfigServerTopic";
@@ -62,9 +66,9 @@ namespace SchduleServer
 
         static void GetConfig(bool isFirst)
         {
-            string url = "http://ConfigServer/api/config/Config/Open";
+            string url = "http://ConfigServer/api/config/Config/Pro";
 #if DEBUG
-            url = "http://" + ConfigServer + "/api/config/Config/Open";
+            url = "http://" + ConfigServer + "/api/config/Config/Dev";
 #endif
             ConfigParam configParam = new ConfigParam
             {
@@ -86,7 +90,7 @@ namespace SchduleServer
                     Environment.SetEnvironmentVariable(item.key, item.value);
                 }
 
-                DatabaseOperation.TYPE = new DBManager();
+                DatabaseOperationWeb.TYPE = new DBManager();
                 Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "> " + "加载配置信息完成");
                 if(isFirst)
                 {
@@ -98,7 +102,7 @@ namespace SchduleServer
                 Console.WriteLine(url);
                 Console.WriteLine(e.StackTrace);
                 Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "> " + "加载配置信息失败");
-                DatabaseOperation.TYPE = new DBManager();
+                DatabaseOperationWeb.TYPE = new DBManager();
             }
         }
         public static async Task Topic(string taskCode)

@@ -14,7 +14,7 @@ namespace SchduleServer
             StringBuilder builder = new StringBuilder();
             builder.AppendFormat(SchduleSqls.SELECT_TASK_LIST);
             string sql = builder.ToString();
-            DataTable dt = DatabaseOperation.ExecuteSelectDS(sql, "T").Tables[0];
+            DataTable dt = DatabaseOperationWeb.ExecuteSelectDS(sql, "T").Tables[0];
             if (dt != null)
             {
                 foreach(DataRow dr in dt.Rows)
@@ -59,7 +59,7 @@ namespace SchduleServer
                 state,
                 stateFrom);
             string sql = builder.ToString();
-            DataTable dt = DatabaseOperation.ExecuteSelectDS(sql, "T").Tables[0];
+            DataTable dt = DatabaseOperationWeb.ExecuteSelectDS(sql, "T").Tables[0];
             if (dt != null)
             {
                 string ids = "";
@@ -80,7 +80,7 @@ namespace SchduleServer
                 stateTo,
                 ids);
                 sql = builder.ToString();
-                if(!DatabaseOperation.ExecuteDML(sql))
+                if(!DatabaseOperationWeb.ExecuteDML(sql))
                 {
                     list = new List<string>();
                 }
